@@ -4,12 +4,14 @@ import { countries } from "../../utils/cosntants";
 import { errorHandler } from "../../utils/errorHandler";
 import { Toaster } from "../../utils/Toaster";
 import { useMutation } from "@tanstack/react-query";
+import { signUpUser } from "./AuthHandler";
 
 
 
 export default function SignUpPage() {
   const [formData, setForm] = useState({
     name: "",
+    companyName: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -30,6 +32,17 @@ export default function SignUpPage() {
     },
     onError: (err) => errorHandler(err),
   });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // console.log("hello")
+    if (formData.password !== formData.confirmPassword) {
+      console.log("hello")
+      Toaster({ title: "Passwords do not match", status: "error" });
+      return;
+    }
+    mutate(formData);
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -55,6 +68,20 @@ export default function SignUpPage() {
               name="name"
               placeholder="John Doe"
               value={formData.name}
+              onChange={handleChange}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#714B67]"
+              required
+            />
+          </div>
+
+          {/* Company Name */}
+          <div>
+            <label className="block text-sm text-gray-700 mb-1">Company Name</label>
+            <input
+              type="text"
+              name="companyName"
+              placeholder="Your Company"
+              value={formData.companyName}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#714B67]"
               required
@@ -138,6 +165,7 @@ export default function SignUpPage() {
           {/* Button */}
           <button
             type="button"
+            onClick={handleSubmit}
             disabled={isPending}
             className="w-full bg-[#714B67] hover:bg-[#714B67]/90 text-white font-medium py-2 rounded-md transition flex items-center justify-center"
           >
