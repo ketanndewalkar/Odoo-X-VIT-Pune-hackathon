@@ -5,6 +5,7 @@ import generateToken from "../utils/generateToken.js";
 import { getCurrencyByCountry } from "../utils/currency.js";
 
 
+const allowedRoles = ["ADMIN", "MANAGER", "EMPLOYEE", "FINANCE", "DIRECTOR", "CFO"];
 export const signupAdmin = async (req, res) => {
   try {
     const {
@@ -170,6 +171,250 @@ export const signin = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: error.message || "Internal server error during signin",
+    });
+  }
+};
+
+export const createUser = async (req, res) => {
+  try {
+    const { name, email, role, managerId } = req.body;
+
+    if (!name || !email || !role) {
+      return res.status(400).json({
+        success: false,
+        message: "Name, email and role are required",
+      });
+    }
+
+    if (!allowedRoles.includes(role)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid role",
+      });
+    }
+
+    const adminUser = req.user;
+
+    if (adminUser.role !== "ADMIN") {
+      return res.status(403).json({
+        success: false,
+        message: "Only admin can create users",
+      });
+    }
+
+    const existingUser = await User.findOne({
+      email: email.toLowerCase().trim(),
+    });
+
+    if (existingUser) {
+      return res.status(409).json({
+        success: false,
+        message: "User already exists with this email",
+      });
+    }
+
+    if (managerId) {
+      const manager = await User.findOne({
+        _id: managerId,
+        companyId: adminUser.companyId,
+        isActive: true,
+      });
+
+      if (!manager) {
+        return res.status(404).json({
+          success: false,
+          message: "Manager not found in your company",
+        });
+      }
+    }
+
+    const defaultPassword = "123456";
+    const hashedPassword = await bcrypt.hash(defaultPassword, 10);
+
+    const user = await User.create({
+      companyId: adminUser.companyId,
+      name: name.trim(),
+      email: email.toLowerCase().trim(),
+      password: hashedPassword,
+      role,
+      managerId: managerId || null,
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: "User created successfully",
+      defaultPassword,
+      user: {
+        _id: user._id,
+        companyId: user.companyId,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        managerId: user.managerId,
+        isActive: user.isActive,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Internal server error while creating user",
+    });
+  }
+};
+
+export const getCompanyUsers = async (req, res) => {
+  try {
+    const users = await User.find({
+      companyId: req.user.companyId,
+    })
+      .select("-password")
+      .populate("managerId", "name email role")
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      success: true,
+      count: users.length,
+      users,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Internal server error while fetching users",
+    });
+  }
+};
+
+export const updateUserRole = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { role } = req.body;
+
+    if (!role) {
+      return res.status(400).json({
+        success: false,
+        message: "Role is required",
+      });
+    }
+
+    if (!allowedRoles.includes(role)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid role",
+      });
+    }
+
+    const user = await User.findOne({
+      _id: id,
+      companyId: req.user.companyId,
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    user.role = role;
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "User role updated successfully",
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        managerId: user.managerId,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Internal server error while updating role",
+    });
+  }
+};
+
+export const assignManager = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { managerId } = req.body;
+
+    const user = await User.findOne({
+      _id: id,
+      companyId: req.user.companyId,
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    if (!managerId) {
+      user.managerId = null;
+      await user.save();
+
+      return res.status(200).json({
+        success: true,
+        message: "Manager removed successfully",
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          managerId: user.managerId,
+        },
+      });
+    }
+
+    if (String(user._id) === String(managerId)) {
+      return res.status(400).json({
+        success: false,
+        message: "User cannot be their own manager",
+      });
+    }
+
+    const manager = await User.findOne({
+      _id: managerId,
+      companyId: req.user.companyId,
+      isActive: true,
+    });
+
+    if (!manager) {
+      return res.status(404).json({
+        success: false,
+        message: "Manager not found",
+      });
+    }
+
+    user.managerId = manager._id;
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Manager assigned successfully",
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        managerId: user.managerId,
+      },
+      manager: {
+        _id: manager._id,
+        name: manager.name,
+        email: manager.email,
+        role: manager.role,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Internal server error while assigning manager",
     });
   }
 };
