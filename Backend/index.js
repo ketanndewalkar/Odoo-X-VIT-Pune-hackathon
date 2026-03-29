@@ -9,7 +9,7 @@ import userRoutes from "./src/routes/user.route.js"
 import companyRoutes from "./src/routes/company.route.js"
 import approvalFlowRoutes from "./src/routes/approvalFlow.route.js"
 import approvalRuleRoutes from "./src/routes/approvalRule.route.js"
-
+import expenseRoutes from "./src/routes/expense.route.js"
 
 
 dotenv.config();
@@ -34,6 +34,7 @@ app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/company", companyRoutes);
 app.use("/api/v1/approval-flows", approvalFlowRoutes);
 app.use("/api/v1/approval-rules", approvalRuleRoutes);
+app.use("/api/v1/expenses", expenseRoutes);
 app.listen(process.env.PORT|| 8080 ,() => {
     console.log(`Server is listening at port ${process.env.PORT || 8080}`)
 })
