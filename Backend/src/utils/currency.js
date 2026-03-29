@@ -15,7 +15,7 @@ export const getCurrencyByCountry = async (countryName) => {
   if (!matchedCountry) {
     throw new Error("Invalid country selected");
   }
-
+  console.log("Matched Country:", matchedCountry); // Debug log to check the matched country data
   const currencies = matchedCountry.currencies;
 
   if (!currencies || Object.keys(currencies).length === 0) {
