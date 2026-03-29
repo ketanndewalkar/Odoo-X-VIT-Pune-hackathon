@@ -57,3 +57,18 @@ export const getMyCompany = async (req, res) => {
     });
   }
 };
+
+export const getAllUsers = async(req,res) => {
+  try{
+    const users = await User.find({companyId: req.user.companyId}).select("-password");
+    return res.status(200).json({
+      success: true,
+      users,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message || "Internal server error",
+    }); 
+  }
+}
