@@ -142,7 +142,12 @@ export const signin = async (req, res) => {
 
     const token = generateToken(user._id);
 
-    return res.status(200).json({
+    return res.status(200)
+    .cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+    })
+    .json({
       success: true,
       message: "Signin successful",
       user: {
