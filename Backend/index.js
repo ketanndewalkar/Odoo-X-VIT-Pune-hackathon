@@ -2,11 +2,14 @@ import express from "express"
 import dotenv from "dotenv"
 import cors from "cors"
 import connectDb from "./src/utils/db.js";
+import cookieParser from "cookie-parser";
 
 // import routes 
 import userRoutes from "./src/routes/user.route.js"
 import companyRoutes from "./src/routes/company.route.js"
-import cookieParser from "cookie-parser";
+import approvalFlowRoutes from "./src/routes/approvalFlow.route.js"
+import approvalRuleRoutes from "./src/routes/approvalRule.route.js"
+
 
 
 dotenv.config();
@@ -29,6 +32,8 @@ app.get("/health",(req,res) => {
 
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/company", companyRoutes);
+app.use("/api/v1/approval-flows", approvalFlowRoutes);
+app.use("/api/v1/approval-rules", approvalRuleRoutes);
 app.listen(process.env.PORT|| 8080 ,() => {
     console.log(`Server is listening at port ${process.env.PORT || 8080}`)
 })

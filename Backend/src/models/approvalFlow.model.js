@@ -50,7 +50,7 @@ const approvalFlowSchema = new mongoose.Schema(
       trim: true,
     },
 
-    isManagerApproved:{
+    isManagerApprover:{
         type:Boolean,
     },
 
@@ -58,7 +58,7 @@ const approvalFlowSchema = new mongoose.Schema(
       type: [approvalStepSchema],
       validate: {
         validator: function (steps) {
-            if(isManagerApproved) return true;
+            if(this.isManagerApprover) return true;
             return steps && steps.length > 0;
         },
         message: "Approval flow must have at least one step",
