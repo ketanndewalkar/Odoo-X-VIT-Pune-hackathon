@@ -11,6 +11,8 @@ import Dashboard from "../pages/Dashboard/MainDiv/DashboardFolder/Dashboard";
 import EmployeeTab from "../pages/Dashboard/MainDiv/EmployeeTabFolder/EmployeeTab";
 import RequestTab from "../pages/Dashboard/MainDiv/RequestTabFolder/RequestTab";
 import AdminProtectRoute from "../components/layout/ProtectedRoute/AdminProtectRoute";
+import ApprovalRulesPage from "../pages/Dashboard/MainDiv/ApprovalPage/ApprovalPage";
+import ManagerTab from "../pages/ManagerDashboard/ManagerTab";
 
 const Publicroutes = [
   {
@@ -87,6 +89,10 @@ const ProtectedAdminroutes = [
         path: "approval-requests",
         element: <RequestTab />,
       },
+      {
+        path: "approval-rules/:id",
+        element: <ApprovalRulesPage />,
+      }
     ],
   },
 ];
@@ -114,30 +120,30 @@ const ProtectedAdminroutes = [
 //     ],
 //   },
 // ];
-// const ProtectedManagerroutes = [
-//   {
-//     path: "/admin",
-//     element: (
-//       <ProtectedRoute>
-//         <DashboardLayout />
-//       </ProtectedRoute>
-//     ),
-//     children: [
-//       {
-//         index: true,
-//         element: <Dashboard />,
-//       },
-//       {
-//         path: "all-employees",
-//         element: <EmployeeTab />,
-//       },
-//       {
-//         path: "approval-requests",
-//         element: <RequestTab />,
-//       },
-//     ],
-//   },
-// ];
+const ProtectedManagerroutes = [
+  {
+    path: "/manager",
+    element: (
+      <ProtectedRoute>
+        <ManagerTab />
+      </ProtectedRoute>
+    ),
+    children: [
+      {
+        index: true,
+        element: <Dashboard />,
+      },
+      {
+        path: "all-employees",
+        element: <EmployeeTab />,
+      },
+      {
+        path: "approval-requests",
+        element: <RequestTab />,
+      },
+    ],
+  },
+];
 
 export const router = createBrowserRouter([
   ...Publicroutes,
