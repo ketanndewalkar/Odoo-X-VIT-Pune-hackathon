@@ -4,6 +4,7 @@ import { useAuthStore } from "../../app/store";
 import { useMutation } from "@tanstack/react-query";
 import { Toaster } from "../../utils/Toaster";
 import { errorHandler } from "../../utils/errorHandler";
+import { loginUser } from "./AuthHandler";
 export default function LoginPage() {
   const [formData, setFormData] = useState({
     email: "",
@@ -47,7 +48,7 @@ export default function LoginPage() {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form className="space-y-4">
           {/* Email */}
           <div>
             <label className="block text-sm text-gray-700 mb-1">Email</label>
@@ -83,8 +84,9 @@ export default function LoginPage() {
 
           {/* Button */}
           <button
-            type="submit"
+            type="button"
             disabled={isPending}
+            onClick={handleSubmit}
             className="w-full bg-[#714B67] hover:bg-[#714B67]/90 text-white font-medium py-2 rounded-md transition flex items-center justify-center"
           >
             {isPending ? (

@@ -7,21 +7,24 @@ export const useAuthStore = create(
     (set) => ({
       user: null,
       token: null,
+      company: null,
 
-      setAuth: (data) => {
+      setAuth: (user, company) => {
         set({
-          user: data.data,
+          user: user,
+          company: company,
         });
       },
+
       logOut: async (navigate) => {
         try {
           const res = await API.get("/auth/logout", { skipInterceptor: true });
           Toaster({ title: res.data.message, status: "success" });
           set({ user: null });
-          window.location.href=`${import.meta.env.VITE_FRONTEND_URL}/`;
+          window.location.href = `${import.meta.env.VITE_FRONTEND_URL}/`;
         } catch (error) {
           set({ user: null });
-          window.location.href=`${import.meta.env.VITE_FRONTEND_URL}/`;
+          window.location.href = `${import.meta.env.VITE_FRONTEND_URL}/`;
         }
       },
     }),
