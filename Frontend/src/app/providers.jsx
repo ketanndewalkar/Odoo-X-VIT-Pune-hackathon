@@ -68,9 +68,9 @@ const Publicroutes = [
   },
 ];
 
-const Protectedroutes = [
+const ProtectedAdminroutes = [
   {
-    path: "/dashboard",
+    path: "/admin",
     element: (
       <ProtectedRoute>
         <DashboardLayout />
@@ -89,27 +89,61 @@ const Protectedroutes = [
         path: "approval-requests",
         element: <RequestTab />,
       },
-      // {
-      //   path: "folders/:folderId",
-      //   element: <NotePage />,
-      // },
-      // {
-      //   path: "folders/:id/note",
-      //   element: <NotePage />,
-      // },
-      // {
-      //   path: "links",
-      //   element: <LinkPage />,
-      // },
     ],
   },
-  // {
-  //   path: "/dashboard/note/:noteId/edit",
-  //   element: <NoteEditorLayout />,
-  // },
 ];
+// const ProtectedEmployeeroutes = [
+//   {
+//     path: "/admin",
+//     element: (
+//       <ProtectedRoute>
+//         <DashboardLayout />
+//       </ProtectedRoute>
+//     ),
+//     children: [
+//       {
+//         index: true,
+//         element: <Dashboard />,
+//       },
+//       {
+//         path: "all-employees",
+//         element: <EmployeeTab />,
+//       },
+//       {
+//         path: "approval-requests",
+//         element: <RequestTab />,
+//       },
+//     ],
+//   },
+// ];
+// const ProtectedManagerroutes = [
+//   {
+//     path: "/admin",
+//     element: (
+//       <ProtectedRoute>
+//         <DashboardLayout />
+//       </ProtectedRoute>
+//     ),
+//     children: [
+//       {
+//         index: true,
+//         element: <Dashboard />,
+//       },
+//       {
+//         path: "all-employees",
+//         element: <EmployeeTab />,
+//       },
+//       {
+//         path: "approval-requests",
+//         element: <RequestTab />,
+//       },
+//     ],
+//   },
+// ];
 
 export const router = createBrowserRouter([
   ...Publicroutes,
-  ...Protectedroutes,
+  ...ProtectedAdminroutes,
+  // ...ProtectedEmployeeroutes,
+  // ...ProtectedManagerroutes
 ]);
