@@ -6,11 +6,11 @@ import Footer from '../common/Footer'
 const AppLayout = () => {
   return (
     <>
-    <div className='w-screen h-fit bg-[#FFFFFF]'>
-        <Navbar/>
-        <Outlet/>
-        <Footer/>
-    </div>
+      <div className='w-screen h-fit bg-[#FFFFFF] p-4'>
+        <Navbar />
+        <Outlet />
+        <Footer />
+      </div>
     </>
   )
 }

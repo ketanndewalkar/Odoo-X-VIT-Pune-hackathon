@@ -26,10 +26,7 @@ const Publicroutes = [
         element: (
           <>
             <HomePage />
-            {/* <Features />
-            <HowPeopleUse />
-            <FeatureExplanation />
-            <CTASection /> */}
+
           </>
         ),
       },
