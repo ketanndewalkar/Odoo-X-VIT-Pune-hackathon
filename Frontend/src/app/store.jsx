@@ -8,6 +8,14 @@ export const useAuthStore = create(
       user: null,
       token: null,
       company: null,
+      roleRoute: {
+        "ADMIN": "/admin",
+        "MANAGER": "/manager",
+        "EMPLOYEE": "/employee",
+        "FINANCE": "/finance",
+        "DIRECTOR": "/director",
+        "CFO": "/cfo",
+      },
 
       setAuth: (user, company) => {
         set({

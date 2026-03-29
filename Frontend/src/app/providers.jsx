@@ -10,6 +10,7 @@ import DashboardLayout from "../components/layout/Dashboardlayout";
 import Dashboard from "../pages/Dashboard/MainDiv/DashboardFolder/Dashboard";
 import EmployeeTab from "../pages/Dashboard/MainDiv/EmployeeTabFolder/EmployeeTab";
 import RequestTab from "../pages/Dashboard/MainDiv/RequestTabFolder/RequestTab";
+import AdminProtectRoute from "../components/layout/ProtectedRoute/AdminProtectRoute";
 
 const Publicroutes = [
   {
@@ -72,9 +73,9 @@ const ProtectedAdminroutes = [
   {
     path: "/admin",
     element: (
-      <ProtectedRoute>
+      <AdminProtectRoute>
         <DashboardLayout />
-      </ProtectedRoute>
+      </AdminProtectRoute>
     ),
     children: [
       {
