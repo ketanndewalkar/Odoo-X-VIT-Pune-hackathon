@@ -47,7 +47,7 @@ const expenseApprovalSchema = new mongoose.Schema(
 
 
 expenseApprovalSchema.index(
-  { expenseId: 1, stepNumber: 1 },
+  { expenseId: 1, stepNumber: 1, approverId: 1 },
   { unique: true }
 );
 
